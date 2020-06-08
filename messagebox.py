@@ -9,7 +9,7 @@ root.iconbitmap("Images/neon.ico") # Insert icon here
 # showinfo, showwarning, showerror, askquestion, askokcancel, askyesno
 
 def popup():
-    response = messagebox.askyesno("This is popup", "Hello World!")
+    response = messagebox.askyesno("This is popup", "Hello World!") # Show messagebox and get response
     if response == 1:
         Label(root, text="You clicked Yes!").pack()
     else:
