@@ -1,5 +1,4 @@
 from tkinter import *
-from PIL import ImageTk, Image
 
 root = Tk() # Init app
 root.title("Frames") # Set title here

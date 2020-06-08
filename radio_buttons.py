@@ -1,6 +1,5 @@
 
 from tkinter import *
-from PIL import ImageTk, Image
 
 root = Tk() # Init app
 root.title("Radio") # Set title here
