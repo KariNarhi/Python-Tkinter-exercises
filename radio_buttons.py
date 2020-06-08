@@ -3,7 +3,7 @@ from tkinter import *
 from PIL import ImageTk, Image
 
 root = Tk() # Init app
-root.title("Images") # Set title here
+root.title("Radio") # Set title here
 root.iconbitmap("Images/neon.ico") # Insert icon here
 
 #r = IntVar()

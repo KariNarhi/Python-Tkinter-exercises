@@ -3,7 +3,7 @@ from tkinter import *
 from PIL import ImageTk, Image
 
 root = Tk() # Init app
-root.title("Images") # Set title here
+root.title("Image_viewer") # Set title here
 root.iconbitmap("Images/neon.ico") # Insert icon here
 
 my_img1 = ImageTk.PhotoImage(Image.open("Images/Burger.jpg").resize((400,400))) # Insert image here
