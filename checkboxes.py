@@ -2,7 +2,7 @@
 from tkinter import *
 
 root = Tk() # Init app
-root.title("Messagebox") # Set title here
+root.title("Checkbox") # Set title here
 root.iconbitmap("Images/neon.ico") # Insert icon here
 root.geometry("300x300")
 
