@@ -170,15 +170,52 @@ delete_btn = Button(root, text="Delete record", command=delete)
 delete_btn.grid(row=10, column=0, columnspan=2, pady=10, padx=10, ipadx=125)
 
 
-
 # Update function
 def update():
+    # Connect to database
+    conn = sqlite3.connect('address_book.db')
+    # Create connection cursor
+    c = conn.cursor()
+
+    # Update data of the selected record ID
+    record_id = str(select_box.get())
+
+    c.execute("""UPDATE addresses SET 
+        first_name = :first,
+        last_name = :last,
+        address = :address,
+        city = :city,
+        state = :state,
+        zipcode = :zipcode
+
+        WHERE oid = :oid""",
+        {
+            'first' : f_name_update.get(),
+            'last' : l_name_update.get(),
+            'address' : address_update.get(),
+            'city' : city_update.get(),
+            'state' : state_update.get(),
+            'zipcode' : zipcode_update.get(),
+            'oid': record_id
+        })
+
+    # Commit changes
+    conn.commit()
+
+    # Close connection
+    conn.close()
+
+    update_window.destroy()
+
+# Editor function
+def editor():
+    global update_window # Make update window global so that it can be destroyed inside update()-function
     update_window = Tk() # Init app
     update_window.title("Update a database record") # Set title here
     update_window.iconbitmap("./../Images/neon.ico") # Insert icon here
-    update_window.geometry("310x400")
+    update_window.geometry("305x200")
 
-     # Connect to database
+    # Connect to database
     conn = sqlite3.connect('address_book.db')
     # Create connection cursor
     c = conn.cursor()
@@ -188,6 +225,13 @@ def update():
     c.execute("SELECT * FROM addresses WHERE oid = " + record_id)
     results = c.fetchall()
 
+    # Make update text boxes global
+    global f_name_update
+    global l_name_update
+    global address_update
+    global city_update
+    global state_update
+    global zipcode_update
 
     # Create text boxes (update window)
     f_name_update = Entry(update_window, width=30)
@@ -239,10 +283,12 @@ def update():
     # Save button
     save_btn = Button(update_window, text="Save", command=update)
     save_btn.grid(row=6, column=0, columnspan=2, pady=10, padx=10, ipadx=115)
+    
 
 # Update button
-update_btn = Button(root, text="Update record", command=update)
-update_btn.grid(row=11, column=0, columnspan=2, pady=10, padx=10, ipadx=125)
+update_editor_btn = Button(root, text="Update record", command=editor)
+update_editor_btn.grid(row=11, column=0, columnspan=2, pady=10, padx=10, ipadx=125)
+
 
 # Commit changes
 conn.commit()
