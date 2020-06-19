@@ -6,7 +6,7 @@ import sqlite3
 root = Tk() # Init app
 root.title("Tkinter with database") # Set title here
 root.iconbitmap("./../Images/neon.ico") # Insert icon here
-root.geometry("350x400")
+root.geometry("350x500")
 
 # Database
 
@@ -45,8 +45,8 @@ state.grid(row=4, column=1)
 zipcode = Entry(root, width=30)
 zipcode.grid(row=5, column=1)
 
-delete_box = Entry(root, width=30)
-delete_box.grid(row=9, column=1, pady=5)
+select_box = Entry(root, width=30)
+select_box.grid(row=9, column=1, pady=5)
 
 # Text box labels
 f_name_label = Label(root, text="First Name")
@@ -67,8 +67,10 @@ state_label.grid(row=4, column=0)
 zipcode_label = Label(root, text="Zipcode")
 zipcode_label.grid(row=5, column=0)
 
-delete_box_label = Label(root, text="ID to delete")
-delete_box_label.grid(row=9, column=0, pady=5)
+select_box_label = Label(root, text="ID to select")
+select_box_label.grid(row=9, column=0, pady=5)
+
+
 
 # Submit function
 def submit():
@@ -108,6 +110,8 @@ submit_btn.grid(row=6, column=0, columnspan=2, pady=10, padx=10, ipadx=100)
 
 query_label = None
 
+
+
 # Query function
 def query():
 
@@ -124,11 +128,11 @@ def query():
     print_records = "  Name \t\t ID \n\n" 
     for record in records:
         print_records += str(record[0]) + " " + str(record[1]) + "\t" + str(record[6]) + "\n"
-        print("\n" + str(record))
+        print("\n" + str(record)) # Print records on the console
 
     global query_label
     query_label = Label(root, text=print_records)
-    query_label.grid(row=11, column=0, columnspan=2)
+    query_label.grid(row=12, column=0, columnspan=2)
 
     # Commit changes
     conn.commit()
@@ -139,6 +143,8 @@ def query():
 query_btn = Button(root, text="Get records", command=query)
 query_btn.grid(row=7, column=0, columnspan=2, pady=10, padx=10, ipadx=130)
 
+
+
 # Delete function
 def delete():
     # Connect to database
@@ -146,7 +152,7 @@ def delete():
     # Create connection cursor
     c = conn.cursor()
 
-    c.execute("DELETE FROM addresses WHERE oid=" + delete_box.get())
+    c.execute("DELETE FROM addresses WHERE oid=" + select_box.get())
 
     # Commit changes
     conn.commit()
@@ -154,7 +160,7 @@ def delete():
     conn.close()
 
     # Clear Delete ID entry
-    delete_box.delete(0, END)
+    select_box.delete(0, END)
 
     # Clear query results label
     query_label.grid_forget()
@@ -162,6 +168,81 @@ def delete():
 # Delete button
 delete_btn = Button(root, text="Delete record", command=delete)
 delete_btn.grid(row=10, column=0, columnspan=2, pady=10, padx=10, ipadx=125)
+
+
+
+# Update function
+def update():
+    update_window = Tk() # Init app
+    update_window.title("Update a database record") # Set title here
+    update_window.iconbitmap("./../Images/neon.ico") # Insert icon here
+    update_window.geometry("310x400")
+
+     # Connect to database
+    conn = sqlite3.connect('address_book.db')
+    # Create connection cursor
+    c = conn.cursor()
+
+    # Get data of the selected record ID
+    record_id = str(select_box.get())
+    c.execute("SELECT * FROM addresses WHERE oid = " + record_id)
+    results = c.fetchall()
+
+
+    # Create text boxes (update window)
+    f_name_update = Entry(update_window, width=30)
+    f_name_update.grid(row=0, column=1, padx=20, pady=(10, 0))
+
+    l_name_update = Entry(update_window, width=30)
+    l_name_update.grid(row=1, column=1)
+
+    address_update = Entry(update_window, width=30)
+    address_update.grid(row=2, column=1)
+
+    city_update = Entry(update_window, width=30)
+    city_update.grid(row=3, column=1)
+
+    state_update = Entry(update_window, width=30)
+    state_update.grid(row=4, column=1)
+
+    zipcode_update = Entry(update_window, width=30)
+    zipcode_update.grid(row=5, column=1)
+
+    # Text box labels (update window)
+    f_name_update_label = Label(update_window, text="First Name")
+    f_name_update_label.grid(row=0, column=0, pady=(10, 0))
+
+    l_name_update_label = Label(update_window, text="Last Name")
+    l_name_update_label.grid(row=1, column=0)
+
+    address_update_label = Label(update_window, text="Address")
+    address_update_label.grid(row=2, column=0)
+
+    city_update_label = Label(update_window, text="City")
+    city_update_label.grid(row=3, column=0)
+
+    state_update_label = Label(update_window, text="State")
+    state_update_label.grid(row=4, column=0)
+
+    zipcode_update_label = Label(update_window, text="Zipcode")
+    zipcode_update_label.grid(row=5, column=0)
+
+    # Insert query results 
+    for data in results:
+        f_name_update.insert(0, data[0])
+        l_name_update.insert(0, data[1])
+        address_update.insert(0, data[2])
+        city_update.insert(0, data[3])
+        state_update.insert(0, data[4])
+        zipcode_update.insert(0, data[5])
+    
+    # Save button
+    save_btn = Button(update_window, text="Save", command=update)
+    save_btn.grid(row=6, column=0, columnspan=2, pady=10, padx=10, ipadx=115)
+
+# Update button
+update_btn = Button(root, text="Update record", command=update)
+update_btn.grid(row=11, column=0, columnspan=2, pady=10, padx=10, ipadx=125)
 
 # Commit changes
 conn.commit()
